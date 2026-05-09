@@ -29,6 +29,22 @@ const getCard = async (req, res) => {
 //create
 const createCard = async (req, res) => {
     const {question, answer} = req.body
+
+    let emptyFields = []
+
+    if(!question){
+        emptyFields.push("question")
+    }
+
+    if(!answer){
+        emptyFields.push("answer")
+    }
+
+    if(emptyFields.length>0){
+        return res.status(400).json({error: "Please fill in all fields!", emptyFields})
+    }
+
+
     try {
         const card = await Card.create({question, answer})
         res.status(200).json(card)        
