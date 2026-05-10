@@ -10,6 +10,10 @@ const cardSchema = new Schema({
     answer: {
         type: String,
         required: true
+    },
+    user_id: {
+        type: String,
+        require: true
     } 
 
 }, {timestamps: true})

@@ -2,8 +2,9 @@ const Card = require("../models/cardModel")
 const mongoose = require("mongoose")
 //get cards
 const getCards = async (req, res) => {
+    const user_id = req.user._id
     try {
-        const cards = await Card.find({}).sort({createdAt: -1})
+        const cards = await Card.find({user_id}).sort({createdAt: -1})
         res.status(200).json(cards)
     } catch (error) {
         
@@ -43,10 +44,9 @@ const createCard = async (req, res) => {
     if(emptyFields.length>0){
         return res.status(400).json({error: "Please fill in all fields!", emptyFields})
     }
-
-
     try {
-        const card = await Card.create({question, answer})
+        const user_id = req.user._id
+        const card = await Card.create({question, answer, user_id})
         res.status(200).json(card)        
     } catch (error) {
         res.status(400).json({error: error.message})

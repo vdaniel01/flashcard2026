@@ -1,20 +1,29 @@
 import { useState } from "react"
 import { useCardContext } from "../hooks/useCardContext"
+import {useAuthContext } from "../hooks/useAuthContext"
+
 export default function CardForm() {
     const {dispatch} = useCardContext()
+    const {user} = useAuthContext()
+
     const [question, setQuestion] = useState("")
     const [answer, setAnswer] = useState("")
     const [error, setError] = useState("")
     const [emptyFields, setEmptyFields] = useState([])
-
+    
     const handleSubmit = async (e) =>{
         e.preventDefault()
+        if(!user){
+            setError("You must be logged in!")
+            return
+        }
         const card = {question, answer}
         const response = await fetch("/api/cards", {
             method: "POST",
             body: JSON.stringify(card),
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${user.token}`
             }
         })
 
