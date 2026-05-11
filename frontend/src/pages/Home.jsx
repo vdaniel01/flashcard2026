@@ -8,7 +8,7 @@ import {useAuthContext } from "../hooks/useAuthContext"
 export default function Home(){
     const {cards, dispatch} = useCardContext()
     const {user} = useAuthContext()
-
+    const [showModal, setShowModal] = useState(false)
     useEffect(() => {
         const fetchCards = async () => {
             const response = await fetch("/api/cards", {
@@ -29,13 +29,25 @@ export default function Home(){
 
     return(
     <>
-    <CardForm/>
-    <div className="home">
-        <div className="cards">
-            {cards && cards.map((card) => (
-                <CardDetails key={card._id} card={card}/>
-            ))}
+<div className="home">
+      <button className="open-modal-btn" onClick={() => setShowModal(true)}>
+        Add New Card
+      </button>
+
+      {showModal && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <button className="close-btn" onClick={() => setShowModal(false)}>&times;</button>
+            <CardForm />
+          </div>
         </div>
+      )}
+
+      <div className="cards">
+        {cards && cards.map((card) => (
+          <CardDetails key={card._id} card={card}/>
+        ))}
+      </div>
     </div>
     </>
     )
